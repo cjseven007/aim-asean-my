@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #004298;
+  --color-secondary: #8c7b00;
+  --color-error: #ff0000;
+  --text-title: 4rem;
+}
+
+.active-link {
+  @apply text-blue-600 underline underline-offset-8;
+}
