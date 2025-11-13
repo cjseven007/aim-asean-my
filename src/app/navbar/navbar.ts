@@ -10,4 +10,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Navbar {
   open = signal(false);
+    navLinks = [
+    { label: 'Home', path: '/', exact: true },
+    { label: 'Courses', path: '/courses' },
+    { label: 'About', path: '/about' },
+  ];
 }

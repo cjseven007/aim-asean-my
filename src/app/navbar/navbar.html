@@ -1,41 +1,28 @@
-<header class="w-full border-b bg-white/80 backdrop-blur">
+<header class="w-full bg-white/80 backdrop-blur shadow-md">
   <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between">
       <!-- Brand -->
       <a routerLink="/" class="flex items-center gap-2">
-        <span class="inline-block rounded bg-blue-600 px-2 py-1 text-xs font-semibold text-white"
-          >AIM</span
-        >
-        <span class="font-semibold tracking-wide">ASEAN</span>
+        <span class="text-2xl font-bold tracking-wide text-primary">AIM ASEAN</span>
       </a>
 
       <!-- Desktop links -->
-      <div class="hidden md:flex items-center gap-6">
+      <div class="hidden md:flex items-center gap-10">
+        @for (link of navLinks; track link.label) {
         <a
-          routerLink="/"
+          [routerLink]="link.path"
           routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="text-sm font-medium hover:text-blue-600 transition"
-          >Home</a
+          [routerLinkActiveOptions]="{ exact: link.exact ?? false }"
+          class="text-md font-medium hover:text-primary transition"
+          >{{ link.label }}</a
         >
-        <a
-          routerLink="/courses"
-          routerLinkActive="active-link"
-          class="text-sm font-medium hover:text-blue-600 transition"
-          >Courses</a
-        >
-        <a
-          routerLink="/about"
-          routerLinkActive="active-link"
-          class="text-sm font-medium hover:text-blue-600 transition"
-          >About</a
-        >
+        }
       </div>
 
       <!-- Mobile menu button -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center rounded p-2 ring-1 ring-gray-300 hover:bg-gray-50"
+        class="md:hidden inline-flex items-center justify-center rounded p-2 hover:bg-gray-50"
         aria-label="Toggle navigation"
         (click)="open.set(!open())"
       >
@@ -66,31 +53,19 @@
     </div>
 
     <!-- Mobile panel -->
-    @if(open()){
+    @if (open()) {
     <div class="md:hidden pb-4">
       <div class="mt-2 flex flex-col gap-2">
+        @for (link of navLinks; track link.label) {
         <a
-          routerLink="/"
-          [routerLinkActiveOptions]="{ exact: true }"
+          [routerLink]="link.path"
           routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: link.exact ?? false }"
           (click)="open.set(false)"
           class="block rounded px-3 py-2 text-sm font-medium hover:bg-gray-50"
-          >Home</a
+          >{{ link.label }}</a
         >
-        <a
-          routerLink="/courses"
-          routerLinkActive="active-link"
-          (click)="open.set(false)"
-          class="block rounded px-3 py-2 text-sm font-medium hover:bg-gray-50"
-          >Courses</a
-        >
-        <a
-          routerLink="/about"
-          routerLinkActive="active-link"
-          (click)="open.set(false)"
-          class="block rounded px-3 py-2 text-sm font-medium hover:bg-gray-50"
-          >About</a
-        >
+        }
       </div>
     </div>
     }

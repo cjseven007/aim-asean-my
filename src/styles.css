@@ -9,5 +9,5 @@
 }
 
 .active-link {
-  @apply text-blue-600 underline underline-offset-8;
+  @apply text-primary font-bold;
 }
