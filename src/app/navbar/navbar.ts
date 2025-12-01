@@ -13,6 +13,7 @@ export class Navbar {
     navLinks = [
     { label: 'Home', path: '/', exact: true },
     { label: 'Courses', path: '/courses' },
+    { label: 'AI Tools', path: '/tools' },
     { label: 'About', path: '/about' },
   ];
 }
