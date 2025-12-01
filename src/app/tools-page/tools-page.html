@@ -3,33 +3,46 @@
   <p class="mt-2 text-gray-600">
     AI tools and technologies by <strong>Google</strong> to get you started.
   </p>
-</section>
-
-<!-- Category Sections -->
-@for (category of categories; track category) {
-  <div class="mx-auto max-w-7xl px-4 py-6">
-    <!-- Category Title -->
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+  <div class="mt-8 flex flex-wrap gap-2">
+    @for (category of categories; track category) {
+    <button
+      type="button"
+      (click)="selectCategory(category)"
+      class="px-3 py-1.5 rounded-full text-xs sm:text-sm border transition"
+      [ngClass]="
+        selectedCategory === category
+          ? 'bg-primary text-white border-primary'
+          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+      "
+    >
       {{ category }}
+    </button>
+    }@empty {
+    <p class="text-gray-500 text-sm">No category available.</p>
+    }
+  </div>
+  <!-- Current category label -->
+  <div class="mt-8">
+    <h2 class="text-2xl font-semibold text-gray-800">
+      {{ selectedCategory }}
     </h2>
+  </div>
 
-    <!-- Responsive grid with fixed gaps -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-3 justify-start"
-         style="grid-template-columns: repeat(auto-fit, minmax(280px, 280px));">
-      @for (tool of toolsByCategory(category); track tool.name) {
-        <cmpnt-detail-card
-          [name]="tool.name"
-          [description]="tool.desc"
-          [link]="tool.link"
-          [pricing]="tool.pricing"
-          [image]="tool.image"
-        >
-        </cmpnt-detail-card>
+  <!-- Tools grid -->
+  <div class="mt-6">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+      @for (tool of visibleTools; track tool.name) {
+      <cmpnt-detail-card
+        [name]="tool.name"
+        [description]="tool.desc"
+        [link]="tool.link"
+        [pricing]="tool.pricing"
+        [image]="tool.image"
+      >
+      </cmpnt-detail-card>
       } @empty {
-        <p>No tools available in this category.</p>
+      <p class="text-gray-500 text-sm">No tools available for this category.</p>
       }
     </div>
   </div>
-} @empty {
-  <p>No categories available.</p>
-}
+</section>

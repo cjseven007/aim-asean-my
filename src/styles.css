@@ -1,6 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
 
+html,
+body {
+  /* Hides scrollbar for IE/Edge/Firefox */
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+
+  /* Ensures no content is cut off and enables main scrolling */
+  overflow: auto !important;
+}
+
+/* Hides scrollbar for Chrome/Safari/Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
 @theme {
   --color-primary: #004298;
   --color-secondary: #8c7b00;
