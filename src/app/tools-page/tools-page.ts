@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { DetailCard } from '../../components/detail-card/detail-card';
-import { CommonModule } from '@angular/common';
 import tools from '../../data/tools-link.json';
 
 @Component({
   selector: 'app-tools-page',
-  imports: [DetailCard, CommonModule],
+  imports: [DetailCard],
   templateUrl: './tools-page.html',
   styleUrl: './tools-page.css',
 })
