@@ -3,128 +3,144 @@
     "name": "Gemini",
     "from": "Google",
     "category": "Core AI Models",
-    "desc": "Google’s AI assistant for search and productivity",
+    "desc": "Google’s AI assistant for search and productivity.",
     "link": "https://gemini.google.com/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/gemini.png"
   },
   {
     "name": "AI Mode in Search",
     "from": "Google Search",
     "category": "Workspace & Productivity",
-    "desc": "Transforms search into dynamic conversational experience, supports document uploads and interactive Canvas",
+    "desc": "Transforms search into dynamic conversational experience, supports document uploads and interactive Canvas.",
     "link": "https://search.google/ways-to-search/ai-mode/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/ai-mode.png"
   },
   {
     "name": "AI Overviews in Search",
     "from": "Google Search",
     "category": "Workspace & Productivity",
-    "desc": "Auto-generated summaries for search queries",
+    "desc": "Auto-generated summaries for search queries.",
     "link": "https://search.google/ways-to-search/ai-overviews/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/ai-overviews.png"
   },
   {
     "name": "Google Vids",
     "from": "Google Workspace",
     "category": "Workspace & Productivity",
-    "desc": "AI-powered video creation (work/training focused), integrated with Workspace via Gemini",
+    "desc": "AI-powered video creation (work/training focused), integrated with Workspace via Gemini.",
     "link": "https://workspace.google.com/intl/en_sg/products/vids/",
-    "pricing": "Paid"
+    "pricing": "Paid",
+    "image": "/assets/tools-logo/google-vids.png"
   },
   {
     "name": "NotebookLM",
     "from": "NotebookLM",
     "category": "Workspace & Productivity",
-    "desc": "AI research assistant for document summaries and audio overviews, part of AI Premium",
+    "desc": "AI research assistant for document summaries and audio overviews, part of AI Premium.",
     "link": "https://notebooklm.google/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/notebooklm.png"
   },
   {
     "name": "Google AI Studio",
     "from": "Google AI Studio",
     "category": "Workspace & Productivity",
-    "desc": "Web-based IDE for prototyping with Gemini and other models; supports multimodal prompts",
+    "desc": "Web-based IDE for prototyping with Gemini and other models; supports multimodal prompts.",
     "link": "https://aistudio.google.com/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/ai-studio.png"
   },
   {
     "name": "Google Labs",
     "from": "Google Labs",
     "category": "Experiments",
-    "desc": "Experimental hub featuring AI apps like Flow, Doppl, Project Mariner, Whisk, and UI prototyping tools",
+    "desc": "Experimental hub featuring AI apps like Flow, Doppl, Project Mariner, Whisk, and UI prototyping tools.",
     "link": "https://labs.google/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/google-labs.png"
   },
   {
     "name": "Vertex AI",
     "from": "Google Cloud",
     "category": "Developer Platforms",
-    "desc": "End-to-end AI platform on Google Cloud for building, deploying, and managing ML models",
+    "desc": "End-to-end AI platform on Google Cloud for building, deploying, and managing ML models.",
     "link": "https://cloud.google.com/vertex-ai",
-    "pricing": "Paid"
+    "pricing": "Paid",
+    "image": "/assets/tools-logo/vertex-ai.png"
   },
   {
     "name": "Vertex AI Studio / Agent Builder / Search",
     "from": "Google Cloud",
     "category": "Developer Platforms",
-    "desc": "AI Studio / Agent Builder / Search — Visual model prototyping, multi-agent systems, and AI-powered search experiences",
+    "desc": "AI Studio / Agent Builder / Search — Visual model prototyping, multi-agent systems, and AI-powered search experiences.",
     "link": "https://cloud.google.com/products/agent-builder",
-    "pricing": "Paid"
+    "pricing": "Paid",
+    "image": "/assets/tools-logo/vertex-ai-studio.png"
   },
   {
     "name": "Gemma",
     "from": "Google Deepmind",
     "category": "Core AI Models",
-    "desc": "Lightweight, open-source model family",
+    "desc": "Lightweight, open-source model family.",
     "link": "https://deepmind.google/models/gemma/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/gemma.png"
   },
   {
     "name": "Imagen",
     "from": "Google Deepmind",
     "category": "Core AI Models",
-    "desc": "High-quality text-to-image model",
+    "desc": "High-quality text-to-image model.",
     "link": "https://deepmind.google/models/imagen/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/imagen.png"
   },
   {
     "name": "Veo",
     "from": "Google Deepmind",
     "category": "Core AI Models",
-    "desc": "Advanced state-of-the-art video generation model",
+    "desc": "Advanced state-of-the-art video generation model.",
     "link": "https://deepmind.google/models/veo/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/veo.png"
   },
   {
     "name": "Lyria",
     "from": "Google Deepmind",
     "category": "Core AI Models",
-    "desc": "Latest AI for text-to-audio generation",
+    "desc": "Latest AI for text-to-audio generation.",
     "link": "https://deepmind.google/models/lyria/",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/lyria.png"
   },
   {
     "name": "TensorFlow",
     "from": "Google Cloud",
     "category": "Tools for Developers & Research",
-    "desc": "Popular open-source ML framework developed by Google Brain",
+    "desc": "Popular open-source ML framework developed by Google Brain.",
     "link": "https://cloud.google.com/tensorflow-enterprise/docs/overview",
-    "pricing": "Free"
+    "pricing": "Free",
+    "image": "/assets/tools-logo/tensorflow.png"
   },
   {
     "name": "Dialogflow",
     "from": "Google Cloud",
     "category": "Tools for Developers & Research",
-    "desc": "NLU platform for building chatbots and conversational interfaces",
+    "desc": "NLU platform for building chatbots and conversational interfaces.",
     "link": "https://cloud.google.com/products/conversational-agents",
-    "pricing": "Freemium"
+    "pricing": "Freemium",
+    "image": "/assets/tools-logo/dialogflow.png"
   },
   {
     "name": "Google Lens",
     "from": "Google Lens",
     "category": "Tools for Developers & Research",
-    "desc": "Vision-based object recognition integrated with search, translation, and shopping",
+    "desc": "Vision-based object recognition integrated with search, translation, and shopping.",
     "link": "https://lens.google/",
-    "pricing": "Free"
+    "pricing": "Free",
+    "image": "/assets/tools-logo/google-lens.png"
   }
 ]
