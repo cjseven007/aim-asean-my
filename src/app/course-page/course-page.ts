@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { CoursesService } from '../../app/services/courses.service';
 import { CourseModule } from '../../app/models/course.models';
@@ -7,7 +7,7 @@ import { CourseModule } from '../../app/models/course.models';
 @Component({
   standalone: true,
   selector: 'app-course-page',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './course-page.html',
   styleUrl: './course-page.css',
 })
