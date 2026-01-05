@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailCard } from '../../components/detail-card/detail-card';
-import tools from '../../data/tools-link.json';
-import {Tool} from '../../app/models/tool.models'
+import { DetailCard } from '../../../components/detail-card/detail-card';
+import tools from '../../../data/tools-link.json';
+import {Tool} from '../../models/tool.models'
 
 @Component({
   standalone:true,

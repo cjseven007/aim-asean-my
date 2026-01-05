@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { CoursesService } from '../../app/services/courses.service';
-import { CourseModule, CourseVideo } from '../../app/models/course.models';
+import { CoursesService } from '../../services/courses.service';
+import { CourseModule, CourseVideo } from '../../models/course.models';
 
 
 @Component({

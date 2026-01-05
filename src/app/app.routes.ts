@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { HomePage } from './home-page/home-page';
-import { CoursePage } from './course-page/course-page';
-import { CourseDetailPage } from './course-detail-page/course-detail-page';
-import { AboutPage } from './about-page/about-page';
-import { ToolsPage } from './tools-page/tools-page';
+import { HomePage } from './pages/home-page/home-page';
+import { CoursePage } from './pages/course-page/course-page';
+import { CourseDetailPage } from './pages/course-detail-page/course-detail-page';
+import { AboutPage } from './pages/about-page/about-page';
+import { ToolsPage } from './pages/tools-page/tools-page';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: HomePage, title: 'AIM ASEAN — Home' },
