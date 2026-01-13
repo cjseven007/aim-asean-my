@@ -1,25 +1,36 @@
-import { Injectable } from '@angular/core';
-import { Auth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut } from '@angular/fire/auth';
-import { authState } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
-import { User } from 'firebase/auth';
+import { Injectable, inject } from '@angular/core';
+import {
+  Auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  browserLocalPersistence,
+  setPersistence,
+  authState,
+  User,
+} from '@angular/fire/auth';
+import { user as authUser$ } from '@angular/fire/auth';
+import { Observable, map, shareReplay } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // declare first
-  user$: Observable<User | null>;
+  private auth = inject(Auth);
 
-  constructor(private auth: Auth) {
-    // now it's safe to use this.auth
-    this.user$ = authState(this.auth);
-  }
+  /** Firebase auth user observable */
+  user$ = authUser$(this.auth); // Observable<User | null>
+
+  /** Convenience boolean */
+  readonly isAuthenticated$ = this.user$.pipe(map((user) => !!user));
 
   async signInWithGoogle(): Promise<void> {
+    // Ensure persistence across reloads
+    // await setPersistence(this.auth, browserLocalPersistence);
+
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(this.auth, provider).then(() => {});
+    await signInWithPopup(this.auth, provider);
   }
 
-  signOut(): Promise<void> {
-    return fbSignOut(this.auth);
+  async signOut(): Promise<void> {
+    await signOut(this.auth);
   }
 }

@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  doc,
-  getDoc,
-  setDoc,
-} from '@angular/fire/firestore';
-import { from, Observable, map } from 'rxjs';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { from, map, Observable } from 'rxjs';
 import { UserProfile } from '../models/user-profile.models';
 
 @Injectable({ providedIn: 'root' })
@@ -13,14 +8,15 @@ export class ProfileService {
   constructor(private firestore: Firestore) {}
 
   private profileDocRef(uid: string) {
-    // Everything here is from @angular/fire/firestore
     return doc(this.firestore, 'profiles', uid);
   }
 
   getUserProfile(uid: string): Observable<UserProfile | null> {
     const ref = this.profileDocRef(uid);
     return from(getDoc(ref)).pipe(
-      map((snapshot) => (snapshot.exists() ? (snapshot.data() as UserProfile) : null))
+      map((snapshot) =>
+        snapshot.exists() ? (snapshot.data() as UserProfile) : null
+      )
     );
   }
 
