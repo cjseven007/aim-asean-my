@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -12,6 +12,10 @@ import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
 
 import { firstValueFrom, of, switchMap, take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserProfile } from '../../models/user-profile.models';
+import { UserStatusService } from '../../services/user-status.service';
+import { UserStatus } from '../../models/user-status.models';
 
 @Component({
   standalone: true,
@@ -20,26 +24,99 @@ import { firstValueFrom, of, switchMap, take } from 'rxjs';
   templateUrl: './profile-page.html',
 })
 export class ProfilePage implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   form!: FormGroup;
 
-  // 🔥 make these signals so zoneless CD can react to them
+  // zoneless-friendly signals
   loading = signal(true);
   saving = signal(false);
   error = signal<string | null>(null);
+
+  // keep loaded profile so submit can merge
+  existingProfile = signal<UserProfile | null>(null);
+
+  // dropdown options
+  readonly malaysianStates = [
+    'JOHOR',
+    'KEDAH',
+    'KELANTAN',
+    'MELAKA',
+    'NEGERI SEMBILAN',
+    'PAHANG',
+    'PERAK',
+    'PERLIS',
+    'PULAU PINANG',
+    'SABAH',
+    'SARAWAK',
+    'SELANGOR',
+    'TERENGGANU',
+    'WILAYAH PERSEKUTUAN KUALA LUMPUR',
+    'WILAYAH PERSEKUTUAN LABUAN',
+    'WILAYAH PERSEKUTUAN PUTRAJAYA',
+  ];
+
+  readonly sectors = [
+    'AGRICULTURE',
+    'CONSTRUCTION',
+    'EDUCATION',
+    'ENERGY',
+    'FINANCE',
+    'HEALTHCARE',
+    'ICT',
+    'LOGISTICS',
+    'MANUFACTURING',
+    'RETAIL/WHOLESALE',
+    'SERVICES',
+    'TOURISM',
+    'OTHER',
+  ];
+
+  readonly sizesOfOperation = [
+    'MICRO (1-9)',
+    'SMALL (10-49)',
+    'MEDIUM (50-199)',
+    'LARGE (200+)',
+  ];
+
+  readonly statuses = ['INCOMPLETE', 'COMPLETE'];
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private profileService: ProfileService,
+    private statusService: UserStatusService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
+      // Personal Details
       fullName: ['', Validators.required],
+      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      jobTitle: ['', Validators.required],
+
+      // Company Details
+      eligible: [null, Validators.required], // boolean radio
       companyName: ['', Validators.required],
       state: ['', Validators.required],
+      branch: ['', Validators.required],
+      sector: ['', Validators.required], // dropdown
+      womanOperated: [null, Validators.required], // boolean radio
+      sizeOfOperation: ['', Validators.required], // dropdown
+
+      // Completion Status
+      status: ['INCOMPLETE', Validators.required],
     });
+
+    // convert typed text fields to ALL CAPS (stored as uppercase)
+    this.enableUppercaseForControls([
+      'fullName',
+      'companyName',
+      'branch',
+      'jobTitle',
+    ]);
 
     this.auth.user$
       .pipe(
@@ -50,18 +127,45 @@ export class ProfilePage implements OnInit {
             this.loading.set(false);
             return of(null);
           }
-          return this.profileService.getUserProfile(user.uid).pipe(take(1));
+
+          // Prefill from auth (email/displayName) while loading profile
+          this.form.patchValue(
+            {
+              fullName: (user.displayName ?? '').toUpperCase(),
+              email: user.email ?? '',
+            },
+            { emitEvent: false }
+          );
+
+          return this.profileService.getUserProfile(user.uid, user).pipe(take(1));
         })
       )
       .subscribe({
         next: (profile) => {
           if (profile) {
-            this.form.patchValue({
-              fullName: profile.fullName,
-              companyName: profile.companyName,
-              state: profile.state,
-            });
+            this.existingProfile.set(profile);
+
+            this.form.patchValue(
+              {
+                fullName: (profile.fullName ?? '').toUpperCase(),
+                email: profile.email ?? this.form.get('email')?.value ?? '',
+                phoneNumber: profile.phoneNumber ?? '',
+                jobTitle: (profile.jobTitle ?? '').toUpperCase(),
+
+                eligible: profile.eligible ?? null,
+                companyName: (profile.companyName ?? '').toUpperCase(),
+                state: (profile.state ?? '').toUpperCase(),
+                branch: (profile.branch ?? '').toUpperCase(),
+                sector: (profile.sector ?? '').toUpperCase(),
+                womanOperated: profile.womanOperated ?? null,
+                sizeOfOperation: (profile.sizeOfOperation ?? '').toUpperCase(),
+
+                status: (profile.status ?? 'INCOMPLETE').toUpperCase(),
+              },
+              { emitEvent: false }
+            );
           }
+
           this.loading.set(false);
         },
         error: (err) => {
@@ -70,6 +174,23 @@ export class ProfilePage implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  private enableUppercaseForControls(controlNames: string[]) {
+    for (const name of controlNames) {
+      const ctrl = this.form.get(name);
+      if (!ctrl) continue;
+
+      ctrl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((val) => {
+          if (typeof val !== 'string') return;
+          const upper = val.toUpperCase();
+          if (val !== upper) {
+            ctrl.patchValue(upper, { emitEvent: false });
+          }
+        });
+    }
   }
 
   async submit() {
@@ -87,16 +208,48 @@ export class ProfilePage implements OnInit {
     this.saving.set(true);
     this.error.set(null);
 
-    const { fullName, companyName, state } = this.form.value;
-
     try {
-      await this.profileService.saveProfile({
+      const existing = this.existingProfile();
+
+      // getRawValue includes disabled controls (email)
+      const v = this.form.getRawValue();
+
+      const payload: UserProfile = {
         uid: user.uid,
-        fullName,
-        companyName,
-        state,
-        profileCompleted: true,
-      });
+
+        // Company Details
+        eligible: v.eligible,
+        companyName: v.companyName,
+        state: v.state,
+        branch: v.branch,
+        sector: v.sector,
+        womanOperated: v.womanOperated,
+        sizeOfOperation: v.sizeOfOperation,
+
+        // Personal Details
+        fullName: v.fullName,
+        email: v.email, // from getRawValue (disabled control)
+        phoneNumber: v.phoneNumber,
+        jobTitle: v.jobTitle,
+
+        // Completion Status
+        status: 'COMPLETE',
+
+        // Merge safety (if you ever add new fields later)
+        ...(existing ? { ...existing } : {}),
+      };
+
+      await this.profileService.saveProfile(payload);
+
+      const existingStatus = await firstValueFrom(
+        this.statusService.getUserStatus(user.uid, user).pipe(take(1))
+      );
+
+      const statusToSave: UserStatus = existingStatus
+        ? { ...existingStatus, profileCompleted: true }
+        : this.statusService.initStatusWithProfile(user, true);
+
+      await this.statusService.saveStatus(statusToSave);
 
       this.router.navigate(['/courses']);
     } catch (err) {
