@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
-import { CoursesService } from '../../app/services/courses.service';
-import { CourseModule } from '../../app/models/course.models';
+import { CoursesService } from '../../services/courses.service';
+import { CourseModule } from '../../models/course.models';
 
 @Component({
   standalone: true,
