@@ -11,7 +11,9 @@ import { environment } from '../environments/environment';
 
 import {
   LucideAngularModule,
-  Mail
+  Mail,
+  User,
+  LogOut
 
 } from 'lucide-angular';
 
@@ -27,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     importProvidersFrom(
       LucideAngularModule.pick({
-        Mail
+        Mail,User,LogOut
       })
     ),
   ]

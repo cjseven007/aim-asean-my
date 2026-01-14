@@ -63,26 +63,41 @@ export class ProfilePage implements OnInit {
 
   async onSubmit(profile: UserProfile) {
     const user = await firstValueFrom(this.auth.user$.pipe(take(1)));
-    if (!user) return;
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.saving.set(true);
     this.error.set(null);
 
     try {
-      await this.profileService.saveProfile({ ...profile, uid: user.uid, status: 'COMPLETE' });
+      // 1) Save profile (always mark COMPLETE)
+      await this.profileService.saveProfile({
+        ...profile,
+        uid: user.uid,
+        status: 'COMPLETE',
+      });
 
-      // keep status profileCompleted true (but DO NOT force preSurvey completed)
+      // 2) Update ONLY profileCompleted in userStatuses
       const existingStatus = await firstValueFrom(
         this.statusService.getUserStatus(user.uid, user).pipe(take(1))
       );
 
-      const statusToSave: UserStatus = existingStatus
-        ? { ...existingStatus, profileCompleted: true }
-        : this.statusService.initStatusWithProfile(user, true);
+      let statusToSave: UserStatus;
+
+      if (existingStatus) {
+        // keep everything else unchanged
+        statusToSave = { ...existingStatus, profileCompleted: true };
+      } else {
+        // create default, profileCompleted=true
+        statusToSave = this.statusService.initStatusWithProfile(user, true);
+      }
 
       await this.statusService.saveStatus(statusToSave);
-    } catch (e) {
-      this.error.set('Failed to save.');
+    } catch (err) {
+      console.error(err);
+      this.error.set('Failed to save profile. Please try again.');
     } finally {
       this.saving.set(false);
     }
