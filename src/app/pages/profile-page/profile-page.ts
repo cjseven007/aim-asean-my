@@ -1,106 +1,102 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import { Router } from '@angular/router';
+import { take, switchMap, of, firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
+import { UserStatusService } from '../../services/user-status.service';
+import { UserProfile } from '../../models/user-profile.models';
+import { UserStatus } from '../../models/user-status.models';
 
-import { firstValueFrom, of, switchMap, take } from 'rxjs';
+import { ProfileForm} from '../../components/profile-form/profile-form';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ProfileForm],
   templateUrl: './profile-page.html',
 })
 export class ProfilePage implements OnInit {
-  form!: FormGroup;
-
-  // 🔥 make these signals so zoneless CD can react to them
   loading = signal(true);
   saving = signal(false);
   error = signal<string | null>(null);
 
+  initialProfile = signal<Partial<UserProfile> | null>(null);
+
   constructor(
-    private fb: FormBuilder,
     private auth: AuthService,
     private profileService: ProfileService,
+    private statusService: UserStatusService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      fullName: ['', Validators.required],
-      companyName: ['', Validators.required],
-      state: ['', Validators.required],
-    });
-
     this.auth.user$
       .pipe(
         take(1),
         switchMap((user) => {
           if (!user) {
-            this.router.navigate(['/login-required']);
-            this.loading.set(false);
+            this.router.navigate(['/login']);
             return of(null);
           }
-          return this.profileService.getUserProfile(user.uid).pipe(take(1));
+          // prefill from auth
+          this.initialProfile.set({
+            uid: user.uid,
+            fullName: user.displayName ?? '',
+            email: user.email ?? '',
+          });
+          return this.profileService.getUserProfile(user.uid, user).pipe(take(1));
         })
       )
       .subscribe({
         next: (profile) => {
-          if (profile) {
-            this.form.patchValue({
-              fullName: profile.fullName,
-              companyName: profile.companyName,
-              state: profile.state,
-            });
-          }
+          if (profile) this.initialProfile.set(profile);
           this.loading.set(false);
         },
-        error: (err) => {
-          console.error('Error loading profile:', err);
-          this.error.set('Failed to load profile. Please try again.');
+        error: () => {
+          this.error.set('Failed to load profile.');
           this.loading.set(false);
         },
       });
   }
 
-  async submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
+  async onSubmit(profile: UserProfile) {
     const user = await firstValueFrom(this.auth.user$.pipe(take(1)));
     if (!user) {
-      this.router.navigate(['/login-required']);
+      this.router.navigate(['/login']);
       return;
     }
 
     this.saving.set(true);
     this.error.set(null);
 
-    const { fullName, companyName, state } = this.form.value;
-
     try {
+      // 1) Save profile (always mark COMPLETE)
       await this.profileService.saveProfile({
+        ...profile,
         uid: user.uid,
-        fullName,
-        companyName,
-        state,
-        profileCompleted: true,
+        status: 'COMPLETE',
       });
 
-      this.router.navigate(['/courses']);
+      // 2) Update ONLY profileCompleted in userStatuses
+      const existingStatus = await firstValueFrom(
+        this.statusService.getUserStatus(user.uid, user).pipe(take(1))
+      );
+
+      let statusToSave: UserStatus;
+
+      if (existingStatus) {
+        // keep everything else unchanged
+        statusToSave = { ...existingStatus, profileCompleted: true };
+      } else {
+        // create default, profileCompleted=true
+        statusToSave = this.statusService.initStatusWithProfile(user, true);
+      }
+
+      await this.statusService.saveStatus(statusToSave);
     } catch (err) {
-      console.error('Error saving profile:', err);
+      console.error(err);
       this.error.set('Failed to save profile. Please try again.');
     } finally {
       this.saving.set(false);

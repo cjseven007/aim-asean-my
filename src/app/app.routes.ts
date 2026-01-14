@@ -9,6 +9,7 @@ import { authGuard } from './guards/auth.guard';
 import { profileCompletedGuard } from './guards/profile-completed.guard';
 import { LoginRequiredPage } from './pages/login-required-page/login-required-page';
 import { ProfilePage } from './pages/profile-page/profile-page';
+import { CompleteProfilePage } from './pages/complete-profile-page/complete-profile-page';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomePage, title: 'AIM ASEAN — Home' },
@@ -30,7 +31,7 @@ export const routes: Routes = [
   { path: 'about', component: AboutPage, title: 'AIM ASEAN — About' },
 
   {
-    path: 'login-required',
+    path: 'login',
     component: LoginRequiredPage,
     title: 'AIM ASEAN — Sign in required',
   },
@@ -40,6 +41,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     title: 'AIM ASEAN — Profile',
   },
+  {path: 'complete-profile',
+    component: CompleteProfilePage,
+    canActivate: [authGuard],
+    title: 'AIM ASEAN — Complete Profile',},
 
   { path: '**', redirectTo: '' },
 ];

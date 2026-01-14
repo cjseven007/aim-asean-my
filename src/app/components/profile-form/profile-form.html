@@ -1,0 +1,217 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-8">
+  <!-- Personal Details -->
+  <div class="rounded-xl border border-gray-200 p-5">
+    <h2 class="text-sm font-semibold text-gray-900">Personal details</h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <!-- Full name -->
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Full name</label>
+        <input
+          type="text"
+          formControlName="fullName"
+          class="placeholder-gray-400 mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="E.g. SEBASTIAN LIM"
+        />
+        @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Full name is required.</p>
+        }
+      </div>
+
+      <!-- Email (disabled/read-only) -->
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:outline-none"
+        />
+        <p class="mt-1 text-xs text-gray-500">Email is taken from your Google sign-in.</p>
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Phone number</label>
+        <input
+          type="tel"
+          formControlName="phoneNumber"
+          class="placeholder-gray-400 mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="E.g. 0123456789"
+        />
+        @if (form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Phone number is required.</p>
+        }
+      </div>
+
+      <!-- Job title -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Job title</label>
+        <input
+          type="text"
+          formControlName="jobTitle"
+          class="placeholder-gray-400 mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="E.g. SOFTWARE ENGINEER"
+        />
+        @if (form.get('jobTitle')?.invalid && form.get('jobTitle')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Job title is required.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Company Details -->
+  <div class="rounded-xl border border-gray-200 p-5">
+    <h2 class="text-sm font-semibold text-gray-900">Company details</h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <!-- Eligible (radio) -->
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Eligible</label>
+        <div class="mt-2 flex gap-4">
+          <label class="inline-flex items-center gap-2">
+            <input type="radio" [value]="true" formControlName="eligible" />
+            <span class="text-sm text-gray-700">YES</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="radio" [value]="false" formControlName="eligible" />
+            <span class="text-sm text-gray-700">NO</span>
+          </label>
+        </div>
+        @if (form.get('eligible')?.invalid && form.get('eligible')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Please select YES or NO.</p>
+        }
+      </div>
+
+      <!-- Company name -->
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Company name</label>
+        <input
+          type="text"
+          formControlName="companyName"
+          class="placeholder-gray-400 mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="E.g. PETRONAS"
+        />
+        @if (form.get('companyName')?.invalid && form.get('companyName')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Company name is required.</p>
+        }
+      </div>
+
+      <!-- State (dropdown all MY states) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">State</label>
+        <select
+          formControlName="state"
+          class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="" disabled>Select a state</option>
+          @for (s of malaysianStates; track s) {
+          <option [value]="s">{{ s }}</option>
+          }
+        </select>
+        @if (form.get('state')?.invalid && form.get('state')?.touched) {
+        <p class="mt-1 text-xs text-red-600">State is required.</p>
+        }
+      </div>
+
+      <!-- Branch -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Branch</label>
+        <input
+          type="text"
+          formControlName="branch"
+          class="placeholder-gray-400 mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="E.g. KUALA LUMPUR"
+        />
+        @if (form.get('branch')?.invalid && form.get('branch')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Branch is required.</p>
+        }
+      </div>
+
+      <!-- Sector (dropdown) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Sector</label>
+        <select
+          formControlName="sector"
+          class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="" disabled>Select a sector</option>
+          @for (sec of sectors; track sec) {
+          <option [value]="sec">{{ sec }}</option>
+          }
+        </select>
+        @if (form.get('sector')?.invalid && form.get('sector')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Sector is required.</p>
+        }
+      </div>
+
+      <!-- Size of operation (dropdown) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Size of operation</label>
+        <select
+          formControlName="sizeOfOperation"
+          class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="" disabled>Select a size</option>
+          @for (sz of sizesOfOperation; track sz) {
+          <option [value]="sz">{{ sz }}</option>
+          }
+        </select>
+        @if (form.get('sizeOfOperation')?.invalid && form.get('sizeOfOperation')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Size of operation is required.</p>
+        }
+      </div>
+
+      <!-- Woman operated (radio) -->
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Woman operated</label>
+        <div class="mt-2 flex gap-4">
+          <label class="inline-flex items-center gap-2">
+            <input type="radio" [value]="true" formControlName="womanOperated" />
+            <span class="text-sm text-gray-700">YES</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="radio" [value]="false" formControlName="womanOperated" />
+            <span class="text-sm text-gray-700">NO</span>
+          </label>
+        </div>
+        @if (form.get('womanOperated')?.invalid && form.get('womanOperated')?.touched) {
+        <p class="mt-1 text-xs text-red-600">Please select YES or NO.</p>
+        }
+      </div>
+
+      <!-- Status (hidden but stored) -->
+      <input type="hidden" formControlName="status" />
+    </div>
+  </div>
+  <!-- Just change formControlNames remain same -->
+  <div class="flex justify-end">
+    <button
+      type="submit"
+      [disabled]="saving"
+      class="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      @if (!saving) { Save } @else {
+      <span class="inline-flex items-center gap-2">
+        <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            d="M4 12a8 8 0 018-8"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="round"
+          ></path>
+        </svg>
+        Saving...
+      </span>
+      }
+    </button>
+  </div>
+</form>

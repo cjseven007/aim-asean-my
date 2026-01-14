@@ -1,64 +1,20 @@
-<section class="mx-auto max-w-xl px-4 py-10">
-  <h1 class="text-2xl font-bold text-gray-900">Complete your profile</h1>
-  <p class="mt-2 text-sm text-gray-600">
-    Before accessing the course modules, please provide a few details about yourself.
-  </p>
+<section class="mx-auto max-w-2xl px-4 py-10">
+  <h1 class="text-2xl font-bold text-gray-900">Profile</h1>
+  <p class="mt-2 text-sm text-gray-600">Update your information.</p>
 
   @if (loading()) {
-  <div class="mt-6 text-sm text-gray-500">Loading your profile...</div>
+  <div class="mt-6 text-sm text-gray-500">Loading...</div>
   } @else { @if (error()) {
-  <p class="mt-3 text-xs text-red-600">
-    {{ error() }}
-  </p>
+  <p class="mt-3 text-xs text-red-600">{{ error() }}</p>
   }
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-4">
-    <!-- Full name -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Full name</label>
-      <input
-        type="text"
-        formControlName="fullName"
-        class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-      />
-      @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
-      <p class="mt-1 text-xs text-red-600">Full name is required.</p>
-      }
-    </div>
-
-    <!-- Company name -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Company name</label>
-      <input
-        type="text"
-        formControlName="companyName"
-        class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-      />
-      @if (form.get('companyName')?.invalid && form.get('companyName')?.touched) {
-      <p class="mt-1 text-xs text-red-600">Company name is required.</p>
-      }
-    </div>
-
-    <!-- State -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">State</label>
-      <input
-        type="text"
-        formControlName="state"
-        class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-      />
-      @if (form.get('state')?.invalid && form.get('state')?.touched) {
-      <p class="mt-1 text-xs text-red-600">State is required.</p>
-      }
-    </div>
-
-    <button
-      type="submit"
-      [disabled]="saving()"
-      class="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:shadow-md disabled:opacity-60"
-    >
-      @if (!saving()) { Save profile &amp; continue } @else { Saving... }
-    </button>
-  </form>
+  <div class="mt-6">
+    <app-profile-form
+      [initialProfile]="initialProfile()"
+      [emailReadonly]="true"
+      [saving]="saving()"
+      (submitted)="onSubmit($event)"
+    />
+  </div>
   }
 </section>

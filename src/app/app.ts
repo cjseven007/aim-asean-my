@@ -16,7 +16,7 @@ export class App {
   constructor(private router: Router) {
     router.events.subscribe(() => {
       const url = this.router.url;
-      this.hideFooter.set(url.startsWith('/login-required') || url.startsWith('/profile'));
+      this.hideFooter.set(url.startsWith('/login') || url.startsWith('/profile') ||url.startsWith('/complete-profile') );
     });
   }
 }
