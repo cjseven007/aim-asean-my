@@ -1,0 +1,82 @@
+<section class="mx-auto max-w-2xl px-4 py-10">
+  <h1 class="text-2xl font-bold text-gray-900">Complete your profile</h1>
+  <p class="mt-2 text-sm text-gray-600">
+    Step 1: Profile details → Step 2: Pre-survey → Access courses
+  </p>
+
+  @if (loading()) {
+  <div class="mt-6 text-sm text-gray-500">Loading...</div>
+  } @else { @if (error()) {
+  <p class="mt-3 text-xs text-red-600">{{ error() }}</p>
+  }
+
+  <!-- Simple stepper -->
+  <div class="mt-6 flex items-center gap-3 text-sm">
+    <div class="flex items-center gap-2">
+      <div
+        class="h-8 w-8 rounded-full flex items-center justify-center"
+        [class.bg-primary]="step() === 1"
+        [class.bg-gray-200]="step() !== 1"
+        [class.text-white]="step() === 1"
+      >
+        1
+      </div>
+      <span class="font-medium">Profile</span>
+    </div>
+
+    <div class="h-px flex-1 bg-gray-200"></div>
+
+    <div class="flex items-center gap-2">
+      <div
+        class="h-8 w-8 rounded-full flex items-center justify-center"
+        [class.bg-primary]="step() === 2"
+        [class.bg-gray-200]="step() !== 2"
+        [class.text-white]="step() === 2"
+      >
+        2
+      </div>
+      <span class="font-medium">Pre-survey</span>
+    </div>
+  </div>
+
+  @if (step() === 1) {
+  <div class="mt-6">
+    <app-profile-form
+      [initialProfile]="initialProfile()"
+      [emailReadonly]="true"
+      [saving]="savingProfile()"
+      (submitted)="onProfileSubmit($event)"
+    />
+  </div>
+  } @if (step() === 2) {
+  <div class="mt-6 rounded-xl border border-gray-200 p-5 space-y-4">
+    <h2 class="text-sm font-semibold text-gray-900">Step 2: Pre-survey</h2>
+    <p class="text-sm text-gray-600">
+      Please complete the pre-survey form. After submission, come back here and click proceed.
+    </p>
+
+    <div class="rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm text-gray-700 break-all">
+      {{ preSurveyFormUrl() }}
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <button
+        type="button"
+        (click)="openPreSurvey()"
+        class="inline-flex items-center justify-center rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 hover:shadow-sm"
+      >
+        Open pre-survey form
+      </button>
+
+      <button
+        type="button"
+        (click)="proceedAfterPreSurvey()"
+        [disabled]="savingSurvey()"
+        class="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        @if (!savingSurvey()) { Proceed to courses } @else { Proceeding... }
+      </button>
+    </div>
+  </div>
+  } }
+</section>

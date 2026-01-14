@@ -1,20 +1,25 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map, take } from 'rxjs';
-import { UserContextService } from '../services/user-context.service';
+import { Auth } from '@angular/fire/auth';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
-export const profileCompletedGuard: CanActivateFn = () => {
-  const userContext = inject(UserContextService);
+export const profileCompletedGuard: CanActivateFn = async () => {
+  const auth = inject(Auth);
+  const firestore = inject(Firestore);
   const router = inject(Router);
 
-  return userContext.profileCompleted$.pipe(
-    take(1),
-    map((completed) => {
-      if (completed) {
-        return true;
-      }
-      // Logged in but profile incomplete → go to profile page
-      return router.createUrlTree(['/profile']);
-    })
-  );
+  const user = auth.currentUser;
+  if (!user) return router.createUrlTree(['/login']);
+
+  const ref = doc(firestore, 'userStatuses', user.uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    return router.createUrlTree(['/complete-profile']);
+  }
+
+  const data = snap.data() as any;
+  const ok = !!data.profileCompleted && !!data.preSurveyFormCompleted;
+
+  return ok ? true : router.createUrlTree(['/complete-profile']);
 };
